@@ -172,12 +172,28 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     color: var(--primary);
     letter-spacing: -0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .logo span {
     color: var(--secondary);
     font-weight: 400;
     margin-left: 4px;
+}
+
+.logo-img {
+    height: 42px;
+    width: auto;
+    border-radius: var(--radius);
+    object-fit: contain;
+    box-shadow: var(--shadow-sm);
+    background: var(--white);
+    padding: 2px;
+    border: 1px solid var(--border-light);
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .nav-links {

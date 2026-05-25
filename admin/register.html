@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Register — UNIC Furnitures</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛋️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <a href="../index.html" class="logo" style="display:inline-flex; align-items: center; gap: 12px; font-family:'Playfair Display',serif; font-size: 2rem; color: #fff; text-decoration: none;"><img src="../Logo.png" alt="UNIC Logo" class="logo-img"> UNIC <span>Furniture</span></a>
+        <p style="color: var(--text-muted); margin-top: 8px;">Admin Registration</p>
+      </div>
+
+      <div id="registerError" style="display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-xl); color: var(--error-light); font-size: var(--text-sm); text-align: center;"></div>
+
+      <form id="registerForm" class="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="regName">Full Name</label>
+          <input type="text" class="form-input" id="regName" placeholder="Admin Name" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regPhone">Phone Number</label>
+          <input type="tel" class="form-input" id="regPhone" placeholder="+91 XXXXXXXXXX" required autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Email Address</label>
+          <input type="email" class="form-input" id="regEmail" placeholder="admin@unicfurniture.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password</label>
+          <div style="position: relative;">
+            <input type="password" class="form-input" id="regPassword" placeholder="Create a password" required autocomplete="new-password" style="padding-right: 48px;">
+            <button type="button" id="toggleRegPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px;">👁</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regAdminCode">Admin Access Code</label>
+          <input type="password" class="form-input" id="regAdminCode" placeholder="Secret access code" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="registerSubmit">
+          Register Account
+        </button>
+      </form>
+
+      <div class="login-back" style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+        <a href="login.html">&larr; Back to Login</a>
+        <a href="../index.html">To Website &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/admin-auth.js"></script>
+</body>
+</html>
