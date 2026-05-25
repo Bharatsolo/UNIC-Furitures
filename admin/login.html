@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — UNIC Furnitures</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛋️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <a href="../index.html" class="logo" style="display:inline-block; font-family:'Playfair Display',serif; font-size: 2rem; color: #fff; text-decoration: none;">UNIC <span>Furniture</span></a>
+        <p style="color: var(--text-muted); margin-top: 8px;">Admin Dashboard</p>
+      </div>
+
+      <div id="loginError" style="display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-xl); color: var(--error-light); font-size: var(--text-sm); text-align: center;"></div>
+
+      <form id="loginForm" class="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" class="form-input" id="loginEmail" placeholder="admin@unicfurniture.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <div style="position: relative;">
+            <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password" style="padding-right: 48px;">
+            <button type="button" id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px;">👁</button>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="loginSubmit">
+          Secure Sign In
+        </button>
+      </form>
+
+      <div class="login-back">
+        <a href="../index.html">&larr; Back to Website</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/admin-auth.js"></script>
+</body>
+</html>

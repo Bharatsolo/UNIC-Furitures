@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — UNIC Furnitures</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛋️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout" id="adminLayout">
+    <!-- Admin Header -->
+    <header class="admin-header" id="adminHeader">
+      <div class="admin-header-left">
+        <a href="../index.html" class="logo">UNIC <span>Furniture</span></a>
+        <span style="color: #9ca3af; font-size: 0.875rem;">| Admin Panel</span>
+      </div>
+      <div class="admin-header-right">
+        <div class="admin-user-info">
+          <div class="admin-user-avatar" id="adminUserAvatar">A</div>
+          <span id="adminUserEmail">admin@unicfurniture.com</span>
+        </div>
+        <button class="btn btn-sm btn-danger" id="logoutBtn" style="padding: 6px 12px; font-size: 0.75rem; background: #ef4444; color: white; border-radius: 6px; cursor: pointer; border: none;">Logout</button>
+      </div>
+    </header>
+
+    <!-- Admin Content -->
+    <main class="admin-content" id="adminContent">
+      <!-- Stats -->
+      <div class="admin-stats" id="adminStats">
+        <div class="admin-stat-card">
+          <div class="admin-stat-header">
+            <span class="admin-stat-label">Total Products</span>
+            <div class="admin-stat-icon">📦</div>
+          </div>
+          <div class="admin-stat-number" id="statTotal">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-header">
+            <span class="admin-stat-label">Sofas & Recliners</span>
+            <div class="admin-stat-icon" style="background: #dcfce7; color: #16a34a;">🛋️</div>
+          </div>
+          <div class="admin-stat-number" id="statSofas">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-header">
+            <span class="admin-stat-label">Beds & Cots</span>
+            <div class="admin-stat-icon" style="background: #e0e7ff; color: #4f46e5;">🛏️</div>
+          </div>
+          <div class="admin-stat-number" id="statBeds">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-header">
+            <span class="admin-stat-label">Featured</span>
+            <div class="admin-stat-icon" style="background: #f3e8ff; color: #9333ea;">⭐</div>
+          </div>
+          <div class="admin-stat-number" id="statFeatured">0</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="admin-toolbar" id="adminToolbar">
+        <div class="admin-toolbar-left">
+          <h3>Products Inventory</h3>
+          <div class="admin-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="adminSearch" placeholder="Search products..." aria-label="Search products">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="addProductBtn" style="padding: 10px 20px; background: var(--primary-color, #c19a6b); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+          ➕ Add Product
+        </button>
+      </div>
+
+      <!-- Products Table -->
+      <div class="admin-table-container" id="tableContainer">
+        <table class="admin-table" id="productsTable">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Colors</th>
+              <th>Status</th>
+              <th>Added</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <!-- Loaded dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+
+  <!-- Product Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add New Product</h3>
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close modal">✕</button>
+    </div>
+    <form id="productForm" novalidate>
+      <div class="modal-body">
+        <!-- Name -->
+        <div class="form-group">
+          <label class="form-label" for="productName">Product Name *</label>
+          <input type="text" class="form-input" id="productName" placeholder="e.g. Premium L-Type Sofa" required>
+          <div class="form-error">Product name is required</div>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label class="form-label" for="productPrice">Price (₹) *</label>
+          <input type="number" class="form-input" id="productPrice" placeholder="e.g. 45000" min="0" required>
+          <div class="form-error">Enter a valid price</div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label class="form-label" for="productCategory">Category *</label>
+          <select class="form-select" id="productCategory" required>
+            <option value="">Select Category</option>
+            <option value="L Type Sofas">L Type Sofas</option>
+            <option value="Recliners">Recliners</option>
+            <option value="Boss Chair">Boss Chairs</option>
+            <option value="Lounger">Loungers</option>
+            <option value="Sofa Cum Bed">Sofa Cum Bed</option>
+            <option value="Designer Cots">Designer Cots</option>
+          </select>
+          <div class="form-error">Category is required</div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label" for="productDescription">Description</label>
+          <textarea class="form-textarea" id="productDescription" placeholder="Product description, materials, dimensions..." rows="3"></textarea>
+        </div>
+
+        <!-- Product Colors (HEX array) -->
+        <div class="form-group">
+          <label class="form-label">Product Colors (For AI Matching) *</label>
+          <div id="colorSwatchesContainer" class="color-swatch-list mb-2">
+            <!-- Dynamic Swatches go here -->
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
+            <input type="color" id="newColorPicker" value="#c19a6b" style="width: 48px; height: 36px; padding: 2px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
+            <button type="button" id="addColorBtn" style="padding: 6px 12px; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem; cursor: pointer;">➕ Add Color</button>
+          </div>
+          <p style="font-size: 0.75rem; color: #6b7280; margin-top: 6px;">Add the dominant colors of this product. These HEX codes will be used by the AI Match engine to recommend this product based on user photos.</p>
+          <div class="form-error" id="colorError">At least one color is required</div>
+        </div>
+
+        <!-- Featured & Trending Toggles -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <div class="form-toggle">
+              <label class="toggle-switch">
+                <input type="checkbox" id="productFeatured">
+                <span class="toggle-slider"></span>
+              </label>
+              <label for="productFeatured" class="form-label" style="margin-bottom: 0; cursor: pointer;">⭐ Featured</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-toggle">
+              <label class="toggle-switch">
+                <input type="checkbox" id="productTrending">
+                <span class="toggle-slider"></span>
+              </label>
+              <label for="productTrending" class="form-label" style="margin-bottom: 0; cursor: pointer;">🔥 Trending</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="form-group">
+          <label class="form-label">Product Image URL *</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="url" id="productImage" class="form-input" placeholder="https://..." required>
+          </div>
+          <div class="form-error">Image URL is required</div>
+          
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 60px; height: 60px; border-radius: 8px; border: 1px solid #d1d5db; background: #f9fafb; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img id="imagePreview" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+              <span id="imagePreviewPlaceholder" style="font-size: 0.75rem; color: #9ca3af;">No Img</span>
+            </div>
+            <span style="font-size: 0.875rem; color: #6b7280;">Image Preview</span>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" id="modalCancelBtn" style="padding: 10px 16px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer;">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="modalSubmitBtn" style="padding: 10px 16px; background: var(--primary-color, #c19a6b); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+          <span id="modalSubmitText">Add Product</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal" id="confirmModal" style="max-width: 400px;">
+    <div class="modal-body" style="text-align: center; padding: 32px 24px;">
+      <div style="font-size: 48px; margin-bottom: 16px;">🗑️</div>
+      <h3 style="font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 8px;">Delete Product?</h3>
+      <p id="confirmText" style="color: #4b5563; font-size: 0.875rem; margin-bottom: 24px;">Are you sure you want to delete this product? This action cannot be undone.</p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="btn" id="confirmCancelBtn" style="padding: 10px 20px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer;">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn" style="padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UNIC Home Furniture - Premium furniture with AI-powered room matching. Browse L Type Sofas, Recliners, Boss Chairs, Loungers, Sofa Cum Beds, and Designer Cots.">
+    <meta property="og:title" content="Match My Room - AI Furniture Matcher | UNIC Home Furniture">
+    <meta property="og:description" content="Find furniture that matches your home. AI-powered room matching and premium furniture collection.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛋️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Match My Room - AI Furniture Matcher | UNIC Home Furniture</title>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">UNIC <span>Furniture</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Collection</a></li>
+                <li><a href="match-my-room.html" class="nav-cta active">✨ Match My Room</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Match Hero Section -->
+    <section class="match-hero">
+        <div class="container">
+            <h1 class="fade-in">✨ Match Your Room</h1>
+            <p class="fade-in">Take a photo of your room wall and we'll suggest the best matching furniture for you</p>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <div class="container">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📸</div>
+                <h3>Upload Your Room Photo</h3>
+                <p>Drag &amp; drop an image here, or use the buttons below</p>
+                <div class="upload-buttons">
+                    <button class="btn btn-primary" id="cameraBtn">📷 Open Camera</button>
+                    <label class="btn btn-secondary upload-btn">📁 Upload Photo<input type="file" accept="image/*" id="fileInput"></label>
+                </div>
+            </div>
+
+            <!-- Camera Container (hidden by default) -->
+            <div class="camera-container" id="cameraContainer">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <canvas id="cameraCanvas"></canvas>
+                <div class="camera-controls">
+                    <button class="capture-btn" id="captureBtn" title="Capture Photo">📸</button>
+                    <button class="btn btn-secondary btn-sm" id="closeCameraBtn">✕ Close</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preview Section (hidden by default) -->
+    <section class="preview-section" id="previewSection" style="display:none">
+        <div class="container">
+            <div class="preview-container">
+                <div class="preview-image-wrapper">
+                    <img id="previewImage" alt="Room preview" loading="lazy">
+                </div>
+                <div class="preview-actions">
+                    <button class="btn btn-primary btn-lg" id="analyzeBtn">🔍 Analyze My Room</button>
+                    <button class="btn btn-secondary" id="retakeBtn">↩️ Choose Different Photo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Color Results (hidden by default) -->
+    <section class="color-results" id="colorResults" style="display:none">
+        <div class="container">
+            <h3 class="fade-in">🎨 Colors Detected in Your Room</h3>
+            <div class="color-palette" id="colorPalette"></div>
+        </div>
+    </section>
+
+    <!-- Results Section (hidden by default) -->
+    <section class="results-section" id="resultsSection" style="display:none">
+        <div class="container">
+            <div class="analysis-card fade-in" id="analysisCard">
+                <h3>🏠 Room Analysis</h3>
+                <p id="analysisText"></p>
+            </div>
+            <h2 class="section-title fade-in" style="text-align:center">Furniture Suggestions for Your Room</h2>
+            <div class="suggestions-grid" id="suggestionsGrid"></div>
+        </div>
+    </section>
+
+    <!-- Visualization Section (hidden by default) -->
+    <section class="visualization-section" id="vizSection" style="display:none">
+        <div class="container">
+            <h2 class="fade-in">🎨 Your Dream Room Visualization</h2>
+            <p class="fade-in">AI-generated preview of your room with suggested furniture</p>
+            <div class="generated-image-container" id="generatedImageContainer">
+                <div class="image-loading-text" id="imageLoadingText">
+                    <div class="spinner" style="width:40px;height:40px;border-width:3px"></div>
+                    <span>Generating your personalized room design…</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary btn-lg" id="downloadBtn">📥 Download Room Design</button>
+                <!-- TODO: Replace +91XXXXXXXXXX with actual WhatsApp number -->
+                <a href="https://wa.me/91XXXXXXXXXX?text=Hi%20UNIC%20Home%20Furniture%2C%20I%20used%20your%20Match%20My%20Room%20feature%20and%20I%20am%20interested%20in%20the%20suggested%20furniture.%20Can%20you%20share%20more%20details%3F" class="btn btn-whatsapp btn-lg" target="_blank">💬 Enquire on WhatsApp</a>
+            </div>
+            <p class="download-tooltip" id="downloadTooltip">If download does not start, press and hold the image to save it.</p>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="loading-text" id="loadingText">Scanning your room colors…</p>
+        <p class="loading-step" id="loadingStep">Step 1 of 4</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3 class="footer-logo">UNIC <span>Furniture</span></h3>
+                    <p>Premium furniture that matches your home. AI-powered room matching and handcrafted designs for modern Indian living.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Collection</a></li>
+                        <li><a href="match-my-room.html">Match My Room</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-categories">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="categories/l-type-sofas.html">L Type Sofas</a></li>
+                        <li><a href="categories/recliners.html">Recliners</a></li>
+                        <li><a href="categories/boss-chair.html">Boss Chairs</a></li>
+                        <li><a href="categories/lounger.html">Loungers</a></li>
+                        <li><a href="categories/sofa-cum-bed.html">Sofa Cum Bed</a></li>
+                        <li><a href="categories/designer-cots.html">Designer Cots</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact Us</h4>
+                    <!-- TODO: Replace with actual shop address -->
+                    <p>📍 UNIC Home Furniture, [Your Street Address], [Your Area], [Your City], Andhra Pradesh, India</p>
+                    <!-- TODO: Replace +91XXXXXXXXXX with actual WhatsApp number -->
+                    <p>📞 <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
+                    <!-- TODO: Replace +91XXXXXXXXXX with actual WhatsApp number -->
+                    <a href="https://wa.me/91XXXXXXXXXX" class="btn btn-whatsapp btn-sm" style="margin-top:12px">💬 WhatsApp Us</a>
+                    <div class="social-links" style="margin-top:16px">
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Instagram">📷</a>
+                        <a href="#" aria-label="YouTube">📺</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 UNIC Home Furniture. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <script src="assets/js/color-extractor.js"></script>
+    <script src="assets/js/gemini-api.js"></script>
+    <script src="assets/js/image-gen.js"></script>
+
+    <!-- Hamburger + Scroll Script -->
+    <script>
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+        // Navbar scroll shadow
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+        // Fade-in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+    <!-- Main Match My Room Script -->
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const previewSection = document.getElementById('previewSection');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const colorResults = document.getElementById('colorResults');
+        const colorPalette = document.getElementById('colorPalette');
+        const resultsSection = document.getElementById('resultsSection');
+        const analysisText = document.getElementById('analysisText');
+        const suggestionsGrid = document.getElementById('suggestionsGrid');
+        const vizSection = document.getElementById('vizSection');
+        const generatedImageContainer = document.getElementById('generatedImageContainer');
+        const imageLoadingText = document.getElementById('imageLoadingText');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const loadingStep = document.getElementById('loadingStep');
+
+        let currentImageData = null; // { base64, mimeType }
+        let generatedImageUrl = null;
+
+        // Category icons and links
+        const categoryMeta = {
+            'L Type Sofas': { icon: '🛋️', link: 'categories/l-type-sofas.html' },
+            'Recliners': { icon: '💺', link: 'categories/recliners.html' },
+            'Boss Chair': { icon: '🪑', link: 'categories/boss-chair.html' },
+            'Lounger': { icon: '🛏️', link: 'categories/lounger.html' },
+            'Sofa Cum Bed': { icon: '🛌', link: 'categories/sofa-cum-bed.html' },
+            'Designer Cots': { icon: '🛏️', link: 'categories/designer-cots.html' }
+        };
+
+        // Loading messages
+        const loadingMessages = [
+            { text: 'Scanning your room colors…', step: 'Step 1 of 5' },
+            { text: 'Consulting our AI design expert…', step: 'Step 2 of 5' },
+            { text: 'Finding your perfect furniture matches…', step: 'Step 3 of 5' },
+            { text: 'Generating your dream room visualization…', step: 'Step 4 of 5' },
+            { text: 'Almost ready, adding finishing touches…', step: 'Step 5 of 5' }
+        ];
+
+        let loadingInterval = null;
+
+        function showLoading() {
+            loadingOverlay.classList.add('active');
+            let index = 0;
+            loadingText.textContent = loadingMessages[0].text;
+            loadingStep.textContent = loadingMessages[0].step;
+            loadingInterval = setInterval(() => {
+                index = (index + 1) % loadingMessages.length;
+                loadingText.textContent = loadingMessages[index].text;
+                loadingStep.textContent = loadingMessages[index].step;
+            }, 3000);
+        }
+
+        function hideLoading() {
+            loadingOverlay.classList.remove('active');
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+                loadingInterval = null;
+            }
+        }
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) handleFile(file);
+        });
+
+        // File input
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFile(file);
+        });
+
+        // Camera
+        let cameraStream = null;
+        const cameraContainer = document.getElementById('cameraContainer');
+        const cameraVideo = document.getElementById('cameraVideo');
+        const cameraCanvas = document.getElementById('cameraCanvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const closeCameraBtn = document.getElementById('closeCameraBtn');
+
+        cameraBtn.addEventListener('click', async () => {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                cameraVideo.srcObject = cameraStream;
+                cameraContainer.style.display = 'block';
+                uploadArea.style.display = 'none';
+            } catch (err) {
+                alert('Camera access denied or not available. Please use the upload button instead.');
+            }
+        });
+
+        captureBtn.addEventListener('click', () => {
+            cameraCanvas.width = cameraVideo.videoWidth;
+            cameraCanvas.height = cameraVideo.videoHeight;
+            cameraCanvas.getContext('2d').drawImage(cameraVideo, 0, 0);
+            const dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.85);
+            stopCamera();
+            processDataUrl(dataUrl, 'image/jpeg');
+        });
+
+        closeCameraBtn.addEventListener('click', stopCamera);
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            cameraContainer.style.display = 'none';
+            uploadArea.style.display = '';
+        }
+
+        // Handle file
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => processDataUrl(e.target.result, file.type);
+            reader.readAsDataURL(file);
+        }
+
+        function processDataUrl(dataUrl, mimeType) {
+            // Extract base64 (remove data URI prefix)
+            const base64 = dataUrl.split(',')[1];
+            currentImageData = { base64, mimeType, dataUrl };
+
+            // Show preview
+            previewImage.src = dataUrl;
+            previewSection.style.display = 'block';
+            uploadArea.style.display = 'none';
+            cameraContainer.style.display = 'none';
+
+            // Hide previous results
+            colorResults.style.display = 'none';
+            resultsSection.style.display = 'none';
+            vizSection.style.display = 'none';
+
+            // Scroll to preview
+            previewSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Retake photo
+        retakeBtn.addEventListener('click', () => {
+            previewSection.style.display = 'none';
+            colorResults.style.display = 'none';
+            resultsSection.style.display = 'none';
+            vizSection.style.display = 'none';
+            uploadArea.style.display = '';
+            fileInput.value = '';
+            currentImageData = null;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Analyze room
+        analyzeBtn.addEventListener('click', async () => {
+            if (!currentImageData) return;
+
+            showLoading();
+
+            try {
+                // Step 1: Extract colors
+                const colors = await extractColors(previewImage, 5);
+                renderColorSwatches(colors, colorPalette);
+                colorResults.style.display = 'block';
+
+                // Step 2: Call Gemini API
+                const result = await analyzeRoom(currentImageData.base64, currentImageData.mimeType, colors);
+
+                // Step 3: Display room analysis
+                analysisText.textContent = result.roomAnalysis;
+
+                // Step 4: Display suggestion cards
+                suggestionsGrid.innerHTML = '';
+                result.suggestions.forEach(suggestion => {
+                    const meta = categoryMeta[suggestion.category] || { icon: '🪑', link: '#' };
+                    const scorePercent = (suggestion.matchScore / 10) * 100;
+
+                    const card = document.createElement('div');
+                    card.className = 'suggestion-card fade-in visible';
+                    card.innerHTML = `
+                        <div class="suggestion-header">
+                            <span class="suggestion-icon">${meta.icon}</span>
+                            <span class="suggestion-category">${suggestion.category}</span>
+                            <span class="suggestion-color-dot" style="background-color: ${suggestion.suggestedColor}" title="${suggestion.suggestedColor}"></span>
+                        </div>
+                        <div class="suggestion-body">
+                            <p><strong>Color:</strong> ${suggestion.suggestedColor}</p>
+                            <p><strong>Material:</strong> ${suggestion.material}</p>
+                            <p><strong>Why it matches:</strong> ${suggestion.reason}</p>
+                        </div>
+                        <div class="match-score">
+                            <div class="match-score-label">
+                                <span>Match Score</span>
+                                <span class="score-value">${suggestion.matchScore}/10</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${scorePercent}%"></div>
+                            </div>
+                        </div>
+                        <div class="suggestion-actions" style="margin-top:16px">
+                            <a href="${meta.link}" class="btn btn-secondary btn-sm btn-block">View ${suggestion.category} →</a>
+                        </div>
+                    `;
+                    suggestionsGrid.appendChild(card);
+                });
+                resultsSection.style.display = 'block';
+
+                // Step 5: Generate room visualization
+                generatedImageUrl = generateRoomImageURL(result.roomAnalysis, result.suggestions);
+                imageLoadingText.innerHTML = '<div class="spinner" style="width:40px;height:40px;border-width:3px"></div><span>Generating your personalized room design…</span>';
+                imageLoadingText.style.display = 'flex';
+                vizSection.style.display = 'block';
+
+                await loadGeneratedImage(generatedImageUrl, generatedImageContainer, imageLoadingText);
+
+                hideLoading();
+
+                // Scroll to results
+                colorResults.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                hideLoading();
+                alert(error.message || 'Something went wrong. Please try again with a clearer photo.');
+                console.error('Analysis error:', error);
+            }
+        });
+
+        // Download button
+        downloadBtn.addEventListener('click', () => {
+            if (generatedImageUrl) {
+                downloadImage(generatedImageUrl, 'UNIC-My-Room-Design.jpg');
+            }
+        });
+    </script>
+
+</body>
+</html>
