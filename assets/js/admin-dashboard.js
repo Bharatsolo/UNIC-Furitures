@@ -42,7 +42,7 @@ function showToast(type, title, message) {
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  
+
   let icon = 'ℹ️';
   if (type === 'success') icon = '✅';
   if (type === 'error') icon = '❌';
@@ -70,7 +70,7 @@ async function loadProducts() {
 
   try {
     const snapshot = await productsRef.orderBy('createdAt', 'desc').get();
-    
+
     adminProducts = [];
     snapshot.forEach(doc => {
       adminProducts.push({ id: doc.id, ...doc.data() });
@@ -88,7 +88,7 @@ async function loadProducts() {
 function renderProducts(filter = '') {
   const tbody = document.getElementById('productsTableBody');
   let products = adminProducts;
-  
+
   if (filter) {
     const q = filter.toLowerCase();
     products = products.filter(p =>
@@ -112,7 +112,7 @@ function renderProducts(filter = '') {
 
     const featuredBadge = product.featured ? '<span style="background: #f3e8ff; color: #9333ea; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-right: 4px;">Featured</span>' : '';
     const trendingBadge = product.trending ? '<span style="background: #ffedd5; color: #ea580c; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">Trending</span>' : '';
-    
+
     let displayImg = product.image || '../assets/placeholder.svg';
 
     const dateStr = product.createdAt ? new Date(product.createdAt.toMillis()).toLocaleDateString() : 'N/A';
@@ -147,13 +147,13 @@ function renderProducts(filter = '') {
 
 function updateStats() {
   document.getElementById('statTotal').textContent = adminProducts.length;
-  
+
   const sofas = adminProducts.filter(p => p.category === 'L Type Sofas' || p.category === 'Recliners' || p.category === 'Lounger');
   document.getElementById('statSofas').textContent = sofas.length;
-  
+
   const beds = adminProducts.filter(p => p.category === 'Designer Cots' || p.category === 'Sofa Cum Bed');
   document.getElementById('statBeds').textContent = beds.length;
-  
+
   const featured = adminProducts.filter(p => p.featured);
   document.getElementById('statFeatured').textContent = featured.length;
 }
@@ -161,7 +161,7 @@ function updateStats() {
 // ── Events ──
 function initEvents() {
   document.getElementById('addProductBtn').addEventListener('click', openAddModal);
-  
+
   const searchInput = document.getElementById('adminSearch');
   searchInput.addEventListener('input', (e) => {
     renderProducts(e.target.value.trim());
@@ -185,7 +185,7 @@ function initEvents() {
   });
 
   document.getElementById('productImage').addEventListener('input', (e) => {
-    const url = e.target.value;
+    let url = formatImageUrl(e.target.value.trim());
     const img = document.getElementById('imagePreview');
     const ph = document.getElementById('imagePreviewPlaceholder');
     if (url) {
@@ -197,18 +197,96 @@ function initEvents() {
       ph.style.display = 'block';
     }
   });
+
+  const imageUpload = document.getElementById('imageUpload');
+  if (imageUpload) {
+    imageUpload.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const progressContainer = document.getElementById('uploadProgressContainer');
+      const progressBar = document.getElementById('uploadProgressBar');
+      const urlInput = document.getElementById('productImage');
+
+      progressContainer.style.display = 'block';
+      progressBar.style.width = '30%';
+      urlInput.disabled = true;
+
+      try {
+        // Compress and convert to Base64
+        const compressedBase64 = await compressAndConvertImage(file);
+        progressBar.style.width = '100%';
+
+        urlInput.value = compressedBase64;
+        urlInput.dispatchEvent(new Event('input'));
+
+        setTimeout(() => {
+          progressContainer.style.display = 'none';
+          urlInput.disabled = false;
+          showToast('success', 'Upload Complete', 'Image processed successfully.');
+        }, 300);
+      } catch (err) {
+        console.error("Image processing failed", err);
+        showToast('error', 'Upload Failed', 'Could not process image.');
+        progressContainer.style.display = 'none';
+        urlInput.disabled = false;
+      }
+    });
+  }
+}
+
+// Client-side image compression to bypass Firebase Storage billing limit
+function compressAndConvertImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress to JPEG format with 0.7 quality (generates a light ~50KB string)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        resolve(dataUrl);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
 }
 
 function renderColorSwatches() {
   const container = document.getElementById('colorSwatchesContainer');
   container.innerHTML = '';
-  
+
   currentColors.forEach(color => {
     const div = document.createElement('div');
     div.className = 'color-swatch-item';
     div.style.backgroundColor = color;
     div.title = color;
-    
+
     const btn = document.createElement('button');
     btn.className = 'remove-color';
     btn.innerHTML = '✕';
@@ -217,7 +295,7 @@ function renderColorSwatches() {
       currentColors = currentColors.filter(c => c !== color);
       renderColorSwatches();
     };
-    
+
     div.appendChild(btn);
     container.appendChild(div);
   });
@@ -242,15 +320,15 @@ function openAddModal() {
   document.getElementById('productForm').reset();
   document.getElementById('modalTitle').textContent = 'Add New Product';
   document.getElementById('modalSubmitText').textContent = 'Add Product';
-  
+
   currentColors = [];
   renderColorSwatches();
-  
+
   document.getElementById('imagePreview').style.display = 'none';
   document.getElementById('imagePreviewPlaceholder').style.display = 'block';
 
   document.querySelectorAll('.form-group.error').forEach(g => g.classList.remove('error'));
-  
+
   openModal('productModal');
 }
 
@@ -274,7 +352,7 @@ function openEditModal(id) {
   renderColorSwatches();
 
   if (product.image) {
-    document.getElementById('imagePreview').src = product.image;
+    document.getElementById('imagePreview').src = formatImageUrl(product.image);
     document.getElementById('imagePreview').style.display = 'block';
     document.getElementById('imagePreviewPlaceholder').style.display = 'none';
   } else {
@@ -288,7 +366,7 @@ function openEditModal(id) {
 
 function validateForm() {
   let isValid = true;
-  
+
   const requiredIds = ['productName', 'productPrice', 'productCategory', 'productImage'];
   requiredIds.forEach(id => {
     const el = document.getElementById(id);
@@ -321,7 +399,7 @@ async function handleProductSubmit(e) {
   const btn = document.getElementById('modalSubmitBtn');
   const txt = document.getElementById('modalSubmitText');
   const originalText = txt.textContent;
-  
+
   btn.disabled = true;
   txt.innerHTML = 'Saving...';
 
@@ -331,7 +409,7 @@ async function handleProductSubmit(e) {
       price: Number(document.getElementById('productPrice').value),
       category: document.getElementById('productCategory').value,
       description: document.getElementById('productDescription').value.trim(),
-      image: document.getElementById('productImage').value.trim(),
+      image: formatImageUrl(document.getElementById('productImage').value.trim()),
       colors: currentColors,
       featured: document.getElementById('productFeatured').checked,
       trending: document.getElementById('productTrending').checked,
@@ -382,4 +460,12 @@ async function executeDelete(id, name) {
     btn.disabled = false;
     btn.textContent = 'Delete';
   }
+}
+
+function formatImageUrl(url) {
+  if (!url) return '';
+  if (url.startsWith('data:')) return url; // Don't format Base64 Data URLs
+  if (url.startsWith('http') || url.startsWith('/')) return url;
+  if (url.startsWith('../')) return url.substring(2);
+  return '/' + url;
 }

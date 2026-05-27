@@ -5,7 +5,8 @@
  */
 
 // IMPORTANT: Paste your free Gemini API key below. Get it free from https://aistudio.google.com — Click Get API Key — No billing required for free tier — 1500 requests per day free
-const GEMINI_API_KEY = 'AIzaSyCcZbCYxVkaaoLqjRgXZXxbpFntOoebRjA'; // <-- Paste your API key here
+const GEMINI_API_KEY = localStorage.getItem('GEMINI_API_KEY') || 'AIzaSyAYGKFGFmmE6Q0gUvKPU0fdx1Hy9J5blwc'; // <-- Paste your API key here
+console.log('Active Gemini API Key:', GEMINI_API_KEY);
 
 const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 

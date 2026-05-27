@@ -9,6 +9,7 @@
     <meta property="og:type" content="website">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛋️</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <title>Match My Room - AI Furniture Matcher | UNIC Home Furniture</title>
 </head>
@@ -20,6 +21,7 @@
             <a href="index.html" class="logo"><img src="Logo.png" alt="UNIC Logo" class="logo-img"> UNIC <span>Furniture</span></a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="products.html">Collection</a></li>
                 <li><a href="match-my-room.html" class="nav-cta active">✨ Match My Room</a></li>
                 <li><a href="contact.html">Contact</a></li>
@@ -98,25 +100,7 @@
         </div>
     </section>
 
-    <!-- Visualization Section (hidden by default) -->
-    <section class="visualization-section" id="vizSection" style="display:none">
-        <div class="container">
-            <h2 class="fade-in">🎨 Your Dream Room Visualization</h2>
-            <p class="fade-in">AI-generated preview of your room with suggested furniture</p>
-            <div class="generated-image-container" id="generatedImageContainer">
-                <div class="image-loading-text" id="imageLoadingText">
-                    <div class="spinner" style="width:40px;height:40px;border-width:3px"></div>
-                    <span>Generating your personalized room design…</span>
-                </div>
-            </div>
-            <div class="action-buttons">
-                <button class="btn btn-primary btn-lg" id="downloadBtn">📥 Download Room Design</button>
-                <!-- TODO: Replace +91XXXXXXXXXX with actual WhatsApp number -->
-                <a href="https://wa.me/91XXXXXXXXXX?text=Hi%20UNIC%20Home%20Furniture%2C%20I%20used%20your%20Match%20My%20Room%20feature%20and%20I%20am%20interested%20in%20the%20suggested%20furniture.%20Can%20you%20share%20more%20details%3F" class="btn btn-whatsapp btn-lg" target="_blank">💬 Enquire on WhatsApp</a>
-            </div>
-            <p class="download-tooltip" id="downloadTooltip">If download does not start, press and hold the image to save it.</p>
-        </div>
-    </section>
+
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
@@ -137,6 +121,7 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
                         <li><a href="products.html">Collection</a></li>
                         <li><a href="match-my-room.html">Match My Room</a></li>
                         <li><a href="contact.html">Contact</a></li>
@@ -157,19 +142,20 @@
                     <h4>Contact Us</h4>
                     <!-- TODO: Replace with actual shop address -->
                     <p>📍 UNIC Home Furniture, [Your Street Address], [Your Area], [Your City], Andhra Pradesh, India</p>
-                    <!-- TODO: Replace +91XXXXXXXXXX with actual WhatsApp number -->
-                    <p>📞 <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
-                    <!-- TODO: Replace +91XXXXXXXXXX with actual WhatsApp number -->
-                    <a href="https://wa.me/91XXXXXXXXXX" class="btn btn-whatsapp btn-sm" style="margin-top:12px">💬 WhatsApp Us</a>
+                    <!-- TODO: Replace +919966033929 with actual WhatsApp number -->
+                    <p>📞 <a href="tel:+919966033929">+91 99660 33929</a></p>
+                    <p>✉️ <a href="mailto:srikrishnaUnicMobiles@gmail.com">srikrishnaUnicMobiles@gmail.com</a></p>
+                    <!-- TODO: Replace +919966033929 with actual WhatsApp number -->
+                    <a href="https://wa.me/919966033929" class="btn btn-whatsapp btn-sm" style="margin-top:12px">💬 WhatsApp Us</a>
                     <div class="social-links" style="margin-top:16px">
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="YouTube">📺</a>
+                        <a href="https://www.facebook.com/share/18pwB9xEtm/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/unic.home.furnishing_mobiles?igsh=NnhlYmM1ODZibXpv" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 UNIC Home Furniture. All rights reserved.</p>
+                <p>&copy; 2026 UNIC Home Furniture. All rights reserved. | <a href="privacy-policy.html" style="color: rgba(255,255,255,0.4); text-decoration: none;">Privacy Policy</a> | <a href="terms.html" style="color: rgba(255,255,255,0.4); text-decoration: none;">Terms of Service</a></p>
             </div>
         </div>
     </footer>
@@ -178,7 +164,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <script src="assets/js/color-extractor.js"></script>
     <script src="assets/js/gemini-api.js"></script>
-    <script src="assets/js/image-gen.js"></script>
 
     <!-- Hamburger + Scroll Script -->
     <script>
@@ -225,16 +210,11 @@
         const resultsSection = document.getElementById('resultsSection');
         const analysisText = document.getElementById('analysisText');
         const suggestionsGrid = document.getElementById('suggestionsGrid');
-        const vizSection = document.getElementById('vizSection');
-        const generatedImageContainer = document.getElementById('generatedImageContainer');
-        const imageLoadingText = document.getElementById('imageLoadingText');
-        const downloadBtn = document.getElementById('downloadBtn');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const loadingText = document.getElementById('loadingText');
         const loadingStep = document.getElementById('loadingStep');
 
         let currentImageData = null; // { base64, mimeType }
-        let generatedImageUrl = null;
 
         // Category icons and links
         const categoryMeta = {
@@ -248,11 +228,9 @@
 
         // Loading messages
         const loadingMessages = [
-            { text: 'Scanning your room colors…', step: 'Step 1 of 5' },
-            { text: 'Consulting our AI design expert…', step: 'Step 2 of 5' },
-            { text: 'Finding your perfect furniture matches…', step: 'Step 3 of 5' },
-            { text: 'Generating your dream room visualization…', step: 'Step 4 of 5' },
-            { text: 'Almost ready, adding finishing touches…', step: 'Step 5 of 5' }
+            { text: 'Scanning your room colors…', step: 'Step 1 of 3' },
+            { text: 'Consulting our AI design expert…', step: 'Step 2 of 3' },
+            { text: 'Finding your perfect furniture matches…', step: 'Step 3 of 3' }
         ];
 
         let loadingInterval = null;
@@ -358,7 +336,6 @@
             // Hide previous results
             colorResults.style.display = 'none';
             resultsSection.style.display = 'none';
-            vizSection.style.display = 'none';
 
             // Scroll to preview
             previewSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -369,7 +346,6 @@
             previewSection.style.display = 'none';
             colorResults.style.display = 'none';
             resultsSection.style.display = 'none';
-            vizSection.style.display = 'none';
             uploadArea.style.display = '';
             fileInput.value = '';
             currentImageData = null;
@@ -398,7 +374,6 @@
                 suggestionsGrid.innerHTML = '';
                 result.suggestions.forEach(suggestion => {
                     const meta = categoryMeta[suggestion.category] || { icon: '🪑', link: '#' };
-                    const scorePercent = (suggestion.matchScore / 10) * 100;
 
                     const card = document.createElement('div');
                     card.className = 'suggestion-card fade-in visible';
@@ -413,15 +388,6 @@
                             <p><strong>Material:</strong> ${suggestion.material}</p>
                             <p><strong>Why it matches:</strong> ${suggestion.reason}</p>
                         </div>
-                        <div class="match-score">
-                            <div class="match-score-label">
-                                <span>Match Score</span>
-                                <span class="score-value">${suggestion.matchScore}/10</span>
-                            </div>
-                            <div class="score-bar">
-                                <div class="score-fill" style="width: ${scorePercent}%"></div>
-                            </div>
-                        </div>
                         <div class="suggestion-actions" style="margin-top:16px">
                             <a href="${meta.link}" class="btn btn-secondary btn-sm btn-block">View ${suggestion.category} →</a>
                         </div>
@@ -429,14 +395,6 @@
                     suggestionsGrid.appendChild(card);
                 });
                 resultsSection.style.display = 'block';
-
-                // Step 5: Generate room visualization
-                generatedImageUrl = generateRoomImageURL(result.roomAnalysis, result.suggestions);
-                imageLoadingText.innerHTML = '<div class="spinner" style="width:40px;height:40px;border-width:3px"></div><span>Generating your personalized room design…</span>';
-                imageLoadingText.style.display = 'flex';
-                vizSection.style.display = 'block';
-
-                await loadGeneratedImage(generatedImageUrl, generatedImageContainer, imageLoadingText);
 
                 hideLoading();
 
@@ -447,13 +405,6 @@
                 hideLoading();
                 alert(error.message || 'Something went wrong. Please try again with a clearer photo.');
                 console.error('Analysis error:', error);
-            }
-        });
-
-        // Download button
-        downloadBtn.addEventListener('click', () => {
-            if (generatedImageUrl) {
-                downloadImage(generatedImageUrl, 'UNIC-My-Room-Design.jpg');
             }
         });
     </script>

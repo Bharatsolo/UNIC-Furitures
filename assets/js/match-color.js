@@ -103,10 +103,27 @@ function rgbToHex(r, g, b) {
   return "#" + toHex(r) + toHex(g) + toHex(b);
 }
 
-function hexToRgb(hex) {
-  hex = hex.replace(/^#/, '');
+function hexToRgb(colorStr) {
+  if (!colorStr) return [0, 0, 0];
+  
+  // Create a temporary element to let the browser resolve the CSS color string
+  const div = document.createElement('div');
+  div.style.color = colorStr;
+  div.style.display = 'none';
+  document.body.appendChild(div);
+  const computedColor = window.getComputedStyle(div).color;
+  document.body.removeChild(div);
+
+  const match = computedColor.match(/\d+/g);
+  if (match) {
+    return match.slice(0, 3).map(Number);
+  }
+
+  // Fallback to manual hex parsing
+  let hex = colorStr.replace(/^#/, '');
   if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
   const num = parseInt(hex, 16);
+  if (isNaN(num)) return [0, 0, 0];
   return [num >> 16, (num >> 8) & 255, num & 255];
 }
 
@@ -202,7 +219,7 @@ function renderRecommendations(matches) {
     const card = document.createElement('div');
     card.className = 'match-card';
     card.innerHTML = `
-      <div class="match-badge">⭐ ${product.matchScore}% ${product.matchLabel}</div>
+      <div class="match-badge">⭐ ${product.matchLabel}</div>
       <img src="${img}" alt="${product.name}" class="match-card-img" onerror="this.src='assets/placeholder.svg'">
       <div class="match-card-body">
         <h4 style="font-size: 1.25rem; font-family: 'Playfair Display', serif; color: #111827; margin-bottom: 4px;">${product.name}</h4>
