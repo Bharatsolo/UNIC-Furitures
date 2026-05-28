@@ -167,7 +167,7 @@ function initEvents() {
     renderProducts(e.target.value.trim());
   });
 
-  document.querySelectorAll('.modal-close, .modal-backdrop, #modalCancelBtn, #confirmCancelBtn').forEach(el => {
+  document.querySelectorAll('.modal-close, .modal-backdrop, #modalCancelBtn, #confirmCancelBtn, #settingsModalCloseBtn, #settingsCancelBtn').forEach(el => {
     el.addEventListener('click', closeModals);
   });
 
@@ -175,6 +175,15 @@ function initEvents() {
   document.getElementById('logoutBtn').addEventListener('click', () => {
     auth.signOut().then(() => { window.location.href = 'login.html'; });
   });
+
+  const openSettingsBtn = document.getElementById('openSettingsBtn');
+  if (openSettingsBtn) {
+    openSettingsBtn.addEventListener('click', openSettingsModal);
+  }
+  const settingsForm = document.getElementById('settingsForm');
+  if (settingsForm) {
+    settingsForm.addEventListener('submit', handleSettingsSubmit);
+  }
 
   document.getElementById('addColorBtn').addEventListener('click', () => {
     const colorVal = document.getElementById('newColorPicker').value;
@@ -468,4 +477,54 @@ function formatImageUrl(url) {
   if (url.startsWith('http') || url.startsWith('/')) return url;
   if (url.startsWith('../')) return url.substring(2);
   return '/' + url;
+}
+
+// ── Settings ──
+async function openSettingsModal() {
+  document.getElementById('settingsGeminiKey').value = '';
+  openModal('settingsModal');
+
+  try {
+    const doc = await db.collection('settings').doc('config').get();
+    if (doc.exists && doc.data().geminiApiKey) {
+      document.getElementById('settingsGeminiKey').value = doc.data().geminiApiKey;
+    }
+  } catch (err) {
+    console.error('Error fetching settings:', err);
+    showToast('error', 'Error', 'Failed to load settings.');
+  }
+}
+
+async function handleSettingsSubmit(e) {
+  e.preventDefault();
+
+  const keyInput = document.getElementById('settingsGeminiKey');
+  const keyVal = keyInput.value.trim();
+
+  const btn = document.getElementById('settingsSubmitBtn');
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = 'Saving...';
+
+  try {
+    await db.collection('settings').doc('config').set({
+      geminiApiKey: keyVal,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    if (keyVal) {
+      localStorage.setItem('GEMINI_API_KEY', keyVal);
+    } else {
+      localStorage.removeItem('GEMINI_API_KEY');
+    }
+
+    showToast('success', 'Settings Saved', 'System configuration has been updated successfully.');
+    closeModals();
+  } catch (err) {
+    console.error('Error saving settings:', err);
+    showToast('error', 'Error', 'Failed to save settings.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
 }

@@ -79,10 +79,16 @@
             <input type="text" id="adminSearch" placeholder="Search products..." aria-label="Search products">
           </div>
         </div>
-        <button class="btn btn-primary" id="addProductBtn"
-          style="padding: 10px 20px; background: var(--primary-color, #c19a6b); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
-          ➕ Add Product
-        </button>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button class="btn" id="openSettingsBtn"
+            style="padding: 10px 20px; background: #ffffff; border: 1px solid #d1d5db; color: #374151; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            ⚙️ Settings
+          </button>
+          <button class="btn btn-primary" id="addProductBtn"
+            style="padding: 10px 20px; background: var(--primary-color, #c19a6b); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            ➕ Add Product
+          </button>
+        </div>
       </div>
 
       <!-- Products Table -->
@@ -254,6 +260,33 @@
           style="padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Delete</button>
       </div>
     </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3>System Settings</h3>
+      <button class="modal-close" id="settingsModalCloseBtn" aria-label="Close modal">✕</button>
+    </div>
+    <form id="settingsForm">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="settingsGeminiKey">Gemini API Key</label>
+          <input type="password" class="form-input" id="settingsGeminiKey" placeholder="AIzaSy...">
+          <p style="font-size: 0.75rem; color: #6b7280; margin-top: 6px;">
+            Enter your Gemini API key from <a href="https://aistudio.google.com" target="_blank" style="color: var(--primary-color, #c19a6b); text-decoration: underline;">Google AI Studio</a>. This key is used for the AI "Match My Room" feature and will be stored securely in your database.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" id="settingsCancelBtn"
+          style="padding: 10px 16px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer;">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="settingsSubmitBtn"
+          style="padding: 10px 16px; background: var(--primary-color, #c19a6b); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+          Save Settings
+        </button>
+      </div>
+    </form>
   </div>
 
   <div id="toastContainer" class="toast-container"></div>

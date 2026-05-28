@@ -4,9 +4,53 @@
  * Free tier: 1500 requests/day
  */
 
-// IMPORTANT: Paste your free Gemini API key below. Get it free from https://aistudio.google.com — Click Get API Key — No billing required for free tier — 1500 requests per day free
-const GEMINI_API_KEY = localStorage.getItem('GEMINI_API_KEY') || 'AIzaSyAYGKFGFmmE6Q0gUvKPU0fdx1Hy9J5blwc'; // <-- Paste your API key here
-console.log('Active Gemini API Key:', GEMINI_API_KEY);
+// We no longer hardcode the API key to prevent public leaks in git repository.
+// Instead, the key is loaded dynamically from gemini-config.js (which is ignored by Git),
+// fetched from Firebase Firestore, or read from localStorage.
+let geminiApiKey = localStorage.getItem('GEMINI_API_KEY') || '';
+
+// Try to load local config dynamically to prevent scary 404 errors in console
+async function loadLocalConfig() {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        // Check if we are running in an admin subdirectory or categories subdirectory
+        const isSubdir = window.location.pathname.includes('/admin/') || window.location.pathname.includes('/categories/');
+        script.src = isSubdir ? '../assets/js/gemini-config.js' : 'assets/js/gemini-config.js';
+        script.onload = () => {
+            if (typeof GEMINI_API_KEY !== 'undefined') {
+                geminiApiKey = GEMINI_API_KEY;
+            }
+            resolve();
+        };
+        script.onerror = () => {
+            resolve(); // Fail silently if file is ignored/missing
+        };
+        document.head.appendChild(script);
+    });
+}
+
+async function getActiveApiKey() {
+    if (geminiApiKey) return geminiApiKey;
+
+    await loadLocalConfig();
+    if (geminiApiKey) return geminiApiKey;
+
+    // Check if Firebase is available and fetch from Firestore config document
+    if (typeof db !== 'undefined' && db) {
+        try {
+            console.log('Fetching Gemini API Key from Firestore settings...');
+            const doc = await db.collection('settings').doc('config').get();
+            if (doc.exists && doc.data().geminiApiKey) {
+                geminiApiKey = doc.data().geminiApiKey;
+                localStorage.setItem('GEMINI_API_KEY', geminiApiKey);
+                return geminiApiKey;
+            }
+        } catch (e) {
+            console.error('Error fetching API key from Firestore:', e);
+        }
+    }
+    return '';
+}
 
 const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
@@ -18,8 +62,9 @@ const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models
  * @returns {Promise<Object>} - { roomAnalysis: string, suggestions: Array }
  */
 async function analyzeRoom(base64Image, mimeType, extractedColors) {
-    if (!GEMINI_API_KEY) {
-        throw new Error('Gemini API key is not set. Please add your API key in gemini-api.js');
+    const apiKey = await getActiveApiKey();
+    if (!apiKey) {
+        throw new Error('Gemini API key is not set. Please configure it in the Admin Dashboard.');
     }
 
     const colorList = extractedColors.map(c => c.hex).join(', ');
@@ -64,7 +109,7 @@ Return ONLY the raw JSON object. No markdown formatting, no code blocks, no back
 
     while (attempts < maxAttempts) {
         try {
-            const response = await fetch(`${GEMINI_ENDPOINT}?key=${GEMINI_API_KEY}`, {
+            const response = await fetch(`${GEMINI_ENDPOINT}?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody)
