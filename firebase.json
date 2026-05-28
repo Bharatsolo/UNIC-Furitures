@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "update_logos.py",
+      "update_logos.js",
+      "update_address.js",
+      "update_address.py",
+      ".vercel",
+      ".git"
+    ]
+  }
+}
